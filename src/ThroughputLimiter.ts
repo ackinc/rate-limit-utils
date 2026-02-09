@@ -30,8 +30,8 @@ export default class ThroughputLimiter<T extends any[], R extends unknown> {
     this.processWaitQueue = this.processWaitQueue.bind(this);
   }
 
-  async process(...args: T): Promise<R> {
-    return new Promise((resolve, reject) => {
+  async process(...args: T): Promise<Awaited<R>> {
+    return new Promise<Awaited<R>>((resolve, reject) => {
       const req: Request<T, R> = { args, resolve, reject };
       this.#waitQueue.push(req);
       if (!this.#pwqTimeout) {

@@ -11,8 +11,8 @@ export default class ConcurrencyLimiter<T extends any[], R extends unknown> {
     this.handler = handler;
   }
 
-  async process(...args: T): Promise<R> {
-    return new Promise((resolve, reject) => {
+  async process(...args: T): Promise<Awaited<R>> {
+    return new Promise<Awaited<R>>((resolve, reject) => {
       if (this.#nReqsInFlight < this.maxConcurrency) {
         this.#handleReq({ args, resolve, reject });
       } else {

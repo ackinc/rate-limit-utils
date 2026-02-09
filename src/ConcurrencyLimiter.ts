@@ -30,7 +30,6 @@ export default class ConcurrencyLimiter {
 
   async #handleReq({ args, resolve, reject }: Request) {
     ++this.#nReqsInFlight;
-    console.log(`${this.#nReqsInFlight} ${this.#queue.length}`);
     try {
       const result = await this.handler(...args);
       resolve(result);

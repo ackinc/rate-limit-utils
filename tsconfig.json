@@ -13,6 +13,9 @@
 
     "types": [],
 
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+
     // Other Outputs
     "sourceMap": true,
     // "declaration": true,

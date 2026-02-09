@@ -2,11 +2,6 @@
   "include": ["**/*"],
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "types": ["node"],
-    "allowImportingTsExtensions": true,
-
-    // we'll be using node's builtin TS support, so emission of
-    //   js files is not necessary
-    "noEmit": true
+    "types": ["node"]
   }
 }

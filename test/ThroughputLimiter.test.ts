@@ -1,6 +1,6 @@
-import { limitThroughput } from "../src/ThroughputLimiter.ts";
 import * as assert from "node:assert";
-import { computeFreqs } from "./utils.ts";
+import { limitThroughput } from "../src/index.ts";
+import { computeFreqs } from "../src/utils.ts";
 
 const limit = 50;
 

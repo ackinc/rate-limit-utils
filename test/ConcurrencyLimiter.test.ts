@@ -1,6 +1,6 @@
-import { limitConcurrency } from "../src/ConcurrencyLimiter.ts";
 import * as assert from "node:assert";
-import { computeMaxConcurrency } from "./utils.ts";
+import { limitConcurrency } from "../src/index.ts";
+import { computeMaxConcurrency } from "../src/utils.ts";
 
 const limit = 50;
 

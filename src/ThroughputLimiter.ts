@@ -77,3 +77,13 @@ export default class ThroughputLimiter {
       .catch(reject);
   }
 }
+
+export function limitThroughput(
+  fn: (...args: unknown[]) => Promise<unknown>,
+  maxThroughput: number,
+) {
+  const limiter = new ThroughputLimiter(maxThroughput, fn);
+  return function (...args: unknown[]) {
+    return limiter.process(...args);
+  };
+}

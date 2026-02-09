@@ -45,3 +45,13 @@ export default class ConcurrencyLimiter {
     }
   }
 }
+
+export function limitConcurrency(
+  fn: (...args: unknown[]) => Promise<unknown>,
+  maxConcurrency: number,
+) {
+  const limiter = new ConcurrencyLimiter(maxConcurrency, fn);
+  return function (...args: unknown[]) {
+    return limiter.process(...args);
+  };
+}

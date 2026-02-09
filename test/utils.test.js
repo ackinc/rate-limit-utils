@@ -1,5 +1,5 @@
 import * as assert from "node:assert";
-import { computeMaxConcurrency } from "./utils.ts";
+import { computeMaxConcurrency } from "../src/utils.ts";
 
 assert.equal(computeMaxConcurrency([]), 0);
 assert.equal(computeMaxConcurrency([{ startTime: 1, endTime: 2 }]), 1);

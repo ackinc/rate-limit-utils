@@ -9,7 +9,7 @@ export default class ThroughputLimiter<T extends any[], R extends unknown> {
   #getCurSlotStart: () => number;
   #getNextSlotStart: () => number;
   #waitQueue: Request<T, R>[] = [];
-  #pwqTimeout: number | null = null;
+  #pwqTimeout: ReturnType<typeof setTimeout> | null = null;
   #slotStartTime: number;
   #slotsAvailable: number;
 

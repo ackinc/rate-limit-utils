@@ -8,7 +8,7 @@ server.listen(3000, () => {
 
 // helpers
 
-function handleRequest(req, res) {
+function handleRequest(_req: http.IncomingMessage, res: http.ServerResponse) {
   const startTime = +new Date();
 
   const [rand1, rand2] = [Math.random(), Math.random()];

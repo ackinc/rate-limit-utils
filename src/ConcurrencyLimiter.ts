@@ -1,24 +1,17 @@
-interface Request {
-  args: unknown[];
-  resolve: (arg0: unknown) => void;
-  reject: (arg0: Error) => void;
-}
+import type { Request } from "./types.ts";
 
-export default class ConcurrencyLimiter {
+export default class ConcurrencyLimiter<T extends any[], R extends unknown> {
   #nReqsInFlight = 0;
-  #queue: Request[] = [];
+  #queue: Request<T, R>[] = [];
   maxConcurrency: number;
-  handler: (...args: unknown[]) => Promise<unknown>;
+  handler: (...args: T) => R;
 
-  constructor(
-    maxConcurrency: number,
-    handler: (...args: unknown[]) => Promise<unknown>,
-  ) {
+  constructor(maxConcurrency: number, handler: (...args: T) => R) {
     this.maxConcurrency = maxConcurrency;
     this.handler = handler;
   }
 
-  async process(...args: unknown[]) {
+  async process(...args: T): Promise<R> {
     return new Promise((resolve, reject) => {
       if (this.#nReqsInFlight < this.maxConcurrency) {
         this.#handleReq({ args, resolve, reject });
@@ -28,7 +21,7 @@ export default class ConcurrencyLimiter {
     });
   }
 
-  async #handleReq({ args, resolve, reject }: Request) {
+  async #handleReq({ args, resolve, reject }: Request<T, R>) {
     ++this.#nReqsInFlight;
     try {
       const result = await this.handler(...args);
@@ -45,12 +38,12 @@ export default class ConcurrencyLimiter {
   }
 }
 
-export function limitConcurrency(
-  fn: (...args: unknown[]) => Promise<unknown>,
+export function limitConcurrency<T extends any[], R extends unknown>(
+  fn: (...args: T) => R,
   maxConcurrency: number,
 ) {
   const limiter = new ConcurrencyLimiter(maxConcurrency, fn);
-  return function (...args: unknown[]) {
+  return function (...args: T) {
     return limiter.process(...args);
   };
 }

@@ -1,5 +1,6 @@
 import { limitThroughput } from "../src/ThroughputLimiter.ts";
 import * as assert from "node:assert";
+import { computeFreqs } from "./utils.ts";
 
 const limit = 50;
 
@@ -14,8 +15,5 @@ const responses = await Promise.all(responsePromises);
 const startTimes = await Promise.all(
   responses.map(async (res) => Math.floor((await res.json()).startTime / 1000)),
 );
-const freqs = startTimes.reduce((acc, startTime) => {
-  acc[startTime] = (acc[startTime] || 0) + 1;
-  return acc;
-}, {});
+const freqs = computeFreqs(startTimes);
 assert.ok(Math.max(...Object.values(freqs)) <= limit);

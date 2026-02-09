@@ -1,25 +1,21 @@
-interface Request {
-  args: unknown[];
-  resolve: (arg0: unknown) => void;
-  reject: (arg0: Error) => void;
-}
+import type { Request } from "./types.ts";
 
 // throughput is measured as requests per time interval
 // a "slot" represents a particular time interval
 
-export default class ThroughputLimiter {
+export default class ThroughputLimiter<T extends any[], R extends unknown> {
   maxThroughput: number;
-  handler: (...args: unknown[]) => Promise<unknown>;
+  handler: (...args: T) => R;
   #getCurSlotStart: () => number;
   #getNextSlotStart: () => number;
-  #waitQueue: Request[] = [];
+  #waitQueue: Request<T, R>[] = [];
   #pwqTimeout: number | null = null;
   #slotStartTime: number;
   #slotsAvailable: number;
 
   constructor(
     maxThroughput: number,
-    handler: (...args: unknown[]) => Promise<unknown>,
+    handler: (...args: T) => R,
     getCurSlotStart: () => number = () => Math.trunc(+new Date() / 1000),
     getNextSlotStart: () => number = () => Math.trunc(+new Date() / 1000 + 1),
   ) {
@@ -34,9 +30,9 @@ export default class ThroughputLimiter {
     this.processWaitQueue = this.processWaitQueue.bind(this);
   }
 
-  async process(...args: unknown[]) {
+  async process(...args: T): Promise<R> {
     return new Promise((resolve, reject) => {
-      const req: Request = { args, resolve, reject };
+      const req: Request<T, R> = { args, resolve, reject };
       this.#waitQueue.push(req);
       if (!this.#pwqTimeout) {
         this.#pwqTimeout = setTimeout(this.processWaitQueue);
@@ -70,20 +66,23 @@ export default class ThroughputLimiter {
     return this.#getNextSlotStart() - this.#getCurSlotStart();
   }
 
-  #handleReq(req: Request) {
+  async #handleReq(req: Request<T, R>) {
     const { args, resolve, reject } = req;
-    this.handler(...args)
-      .then(resolve)
-      .catch(reject);
+    try {
+      const result = await this.handler(...args);
+      resolve(result);
+    } catch (e) {
+      reject(e instanceof Error ? e : new Error(`${e}`));
+    }
   }
 }
 
-export function limitThroughput(
-  fn: (...args: unknown[]) => Promise<unknown>,
+export function limitThroughput<T extends any[], R extends unknown>(
+  fn: (...args: T) => R,
   maxThroughput: number,
 ) {
   const limiter = new ThroughputLimiter(maxThroughput, fn);
-  return function (...args: unknown[]) {
+  return function (...args: T) {
     return limiter.process(...args);
   };
 }

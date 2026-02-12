@@ -1,6 +1,6 @@
 # rate-limit-utils
 
-- exposes a ThroughputLimiter (limits reqs/sec) and a ConcurrencyLimiter (does what the name says)
+Exposes a ThroughputLimiter (limits reqs/sec) and a ConcurrencyLimiter (does what the name says)
 
 ### Usage
 

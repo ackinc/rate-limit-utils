@@ -1,0 +1,11 @@
+{
+  "include": ["**/*"],
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "target": "es6", // support for private identifiers
+    "types": []
+  }
+}

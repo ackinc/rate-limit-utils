@@ -1,7 +1,10 @@
 {
-  "include": ["**/*"],
+  "include": ["**/*", "../src/**/*"],
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "composite": true,
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "types": ["node"]
   }
 }

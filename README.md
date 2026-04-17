@@ -2,10 +2,10 @@
 
 Exposes a ThroughputLimiter (limits reqs/sec) and a ConcurrencyLimiter (does what the name says)
 
-### Usage
+## Usage
 
-```
-import { limitThroughput, limitConcurrency } from 'rate-limit-utils';
+```javascript
+import { limitThroughput, limitConcurrency } from "rate-limit-utils";
 
 // limited to 50 reqs / sec
 const tputLimitedFetch = limitThroughput(fetch, 50);
@@ -14,5 +14,4 @@ const tputLimitedFetch = limitThroughput(fetch, 50);
 const concLimitedFetch = limitConcurrency(fetch, 50);
 
 // now use tputLimitedFetch or concLimitedFetch instead of fetch
-
 ```
